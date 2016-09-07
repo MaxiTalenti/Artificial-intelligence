@@ -32,7 +32,7 @@ En el formato de entrega se explica qué hacer frente a casos de falta de memori
 
 ## Formato de entrega:
 
-La resolución del ejercicio debe realizarse en un archivo llamado 'entrega_1_tradicional.py', que debe ser subido a la raíz del repositorio git/mercurial del grupo.
+La resolución del ejercicio debe realizarse en un archivo llamado `entrega_1_tradicional.py`, que debe ser subido a la raíz del repositorio git/mercurial del grupo.
 
 El módulo debe tener una función llamada 'resolver', que reciba los siguientes parámetros:
 
@@ -42,7 +42,7 @@ El módulo debe tener una función llamada 'resolver', que reciba los siguientes
 
 Al llamar a esta función, se debe ejecutar la búsqueda especificada y devolver el nodo resultante (lo que devuelve el método de búsqueda de SimpleAI).
 
-Las estadísticas deben subirse también al repositorio en un archivo llamado entrega_1_tradicional.txt con una linea por cada caso, con el siguiente formato para cada una:
+Las estadísticas deben subirse también al repositorio en un archivo llamado `entrega_1_tradicional.txt` con una linea por cada caso, con el siguiente formato para cada una:
 > numero_de_caso:cantidad_nodos_visitados,profundidad_solucion,costo_solucion,largo_maximo_frontera
 
 ### Ejemplo:
@@ -50,13 +50,16 @@ Las estadísticas deben subirse también al repositorio en un archivo llamado en
 > 2:60,20,8,40
 > 3:-1,-1,-1,-1
 > 4:...
-...
+> ...
+
 Si alguno de los métodos quedó bloqueado en un bucle infinito, o se quedaron sin memoria, o demoró más de 1 hora en ejecutarse, incluir la linea en el archivo, pero con todos valores en -1, y agregar un segundo archivo llamado explicaciones.txt donde expliquen el motivo.
 
 Respetar nombres de archivos, funciones, parámetros y tipos de datos exáctamente como se dicen en este enunciado. Cualquier falla por no respetar la interfaz definida, se considera no entregado.
 
 Si quieren probar que lo están haciendo de manera correcta, pueden descargar el script llamado probar_entrega_1.py del repositorio de la materia (directorio 2016), y luego de posicionarlo en el mismo directorio que su entrega, ejecutarlo de esta forma:
-python probar_entrega_1.py
+
+> python probar_entrega_1.py
+
 Si eso no funciona, pueden estar seguros de que algo no están haciendo bien. En los casos de error más comunes, el script puede explicarles lo que están haciendo mal. En casos más raros, no tanto. Recuerden que pueden preguntar en el grupo todo lo que necesiten!
 
 ### Notas útiles:
@@ -71,5 +74,6 @@ Si eso no funciona, pueden estar seguros de que algo no están haciendo bien. En
 
 > print resultado # ...
 > print visor.stats  # esto les va a imprimir las estadísticas que necesitan
+
 * El WebViewer es muy útil para probar y visualizar cosas, encontrar problemas, etc. Pero recuerden desactivarlo para la versión entregada, de lo contrario cuando la corrección automática trate de llamar a los algoritmos, se va a quedar tildada esperando.
 * También recuerden que el módulo no debe ejecutar ninguna búsqueda al ser importado. Para ello, utilicen el "truco" del if __name__ == '__main__': que vimos en clases (está en el ejemplo del repo).
