@@ -29,12 +29,27 @@ class problema(SearchProblem):
 	def is_goal(self, state):
 		for a, b in enumerate(search_king(state)):
 			resultado = search_max_list(state)
-			## Obtiene si el rey se encuentra en algún borde del cuadro
-			if (b == 0 or b == resultado[2:3] or b == resultado[1:2] or b == resultado[0:1]):
+			## Obtiene si el rey se encuentra en algun borde del cuadro
+			if (b == resultado[2:3] or b == resultado[1:2] or b == resultado[0:1]):
 				return '- Es meta el estado'
 		return '- No es meta el estado'
 
-
+	def actions(self, state):
+		board = state_to_board(state)
+		n = len(board) - 1
+		row_0, col_0 = search_number(state_to_board(state),0)
+		actions = []
+		if row_0 > 0:
+			actions.append(('Arriba',(-1,0)))
+		if row_0 < n:
+			actions.append(('Abajo',(1,0)))
+		if col_0 > 0:
+			actions.append(('Izquierda',(0,-1)))
+		if col_0 < n:
+			actions.append(('Derecha',(0,1)))
+		return actions
+		
+	def result(self, state, action):
 
 ## for i,x in enumerate(state_to_board(INITIAL)):
 ##	if (i == INITIALFILA):
@@ -47,6 +62,8 @@ class problema(SearchProblem):
 problema = problema()
 print(problema.is_goal(INITIAL))
 
-#def RevisarIzq(self, Fila, Columna):
-#	if (Fila >= 1):
+# FALTA TODAVIA
+# 2- Heuristica
+# 3- metodo results
+# 1- controlar actions
 
