@@ -1,69 +1,96 @@
-from simpleai.search import SearchProblem, breadth_first
-from simpleai.search.viewers import ConsoleViewer
+# coding=utf-8
+from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, astar
+from simpleai.search.viewers import ConsoleViewer, BaseViewer
 import random
 
-INITIAL = '1010101000\n000100000\n1000000000\n0100001101\n1000000110\n000X100001\n1000010001\n1000000100\n0010100001\n0100101100'
-INITIALFILA = random.randint(0,9)
-INITIALCOLUMNA = random.randint(0,9)
+PEONES = [(0,0),(0,2),(0,4),(0,6),(1,4),(2,0),(3,1),(3,6),(3,7),(3,9),(4,0),(4,7),(4,8),(5,4),
+(5,9),(6,0),(6,5),(6,9),(7,0),(7,7),(8,2),(8,4),(8,9),(9,1),(9,4),(9,6),(9,7)]
 
-## Lista las filas
-def state_to_board(state):
-        return [list(x) for x in state.split('\n')]
+fila_t,col_t = (9,9) #TAMAÑO TABLERO
 
-def board_to_state(board):
-    return '\n'.join([''.join(row) for row in board])
+def muerte_rey(state): #LISTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	fila_r,col_r = state 
 
-## Obtine la posicion del rey.
-def search_king(board):
-	for row_index, row in enumerate(state_to_board(board)):
-		for col_index, value in enumerate(row):
-			if value == 'X':
-				return (row_index, col_index)
+	cant_peones = 0 
+	if fila_r > 0: 
+		## Verificar si existe peon arriba
+		if (fila_r - 1, col_r) in PEONES:
+			cant_peones=cant_peones + 1
+			#######################print ('Arriba hay peon', fila-1, col)
+	if fila_r < fila_t:
+		## Verificar si existe peon abajo
+		if (fila_r + 1, col_r) in PEONES:
+			cant_peones=cant_peones + 1
+			#######################print ('Abajo hay peon', fila + 1, col)
+	if col_r > 0:
+		## Verificar si existe peon a la iqzuierda
+		if (fila_r, col_r -1) in PEONES:
+			cant_peones=cant_peones + 1
+			#######################print ('A la izquierda hay peon', fila, col -1)
+	if col_r < col_t:
+		## Verificar si existe peon a la derecha
+		if (fila_r, col_r + 1) in PEONES:
+			cant_peones=cant_peones + 1
+			#######################print ('A la derecha hay peon', fila, col + 1)
+	if cant_peones >=2:
+		return False
+	else:
+		return True
 
-def search_max_list(board):
-	for i, row in enumerate(state_to_board(board)):
-		x = len(row) -1
-	return [x,i,0]
+class HnefataflProblema(SearchProblem):
 
-class problema(SearchProblem):
 	def is_goal(self, state):
-		for a, b in enumerate(search_king(state)):
-			resultado = search_max_list(state)
-			## Obtiene si el rey se encuentra en algun borde del cuadro
-			if (b == resultado[2:3] or b == resultado[1:2] or b == resultado[0:1]):
-				return '- Es meta el estado'
-		return '- No es meta el estado'
+		fila_r,col_r = state
+		return (fila_r in [0,9] or col_r in [0,9])
 
 	def actions(self, state):
-		board = state_to_board(state)
-		n = len(board) - 1
-		row_0, col_0 = search_number(state_to_board(state),0)
+		fila_r, col_r = state
 		actions = []
-		if row_0 > 0:
-			actions.append(('Arriba',(-1,0)))
-		if row_0 < n:
-			actions.append(('Abajo',(1,0)))
-		if col_0 > 0:
-			actions.append(('Izquierda',(0,-1)))
-		if col_0 < n:
-			actions.append(('Derecha',(0,1)))
+		if fila_r > 0: 
+			#Arriba
+			if (fila_r - 1, col_r) not in PEONES and (muerte_rey((fila_r - 1,col_r))):
+				actions.append(('Arriba',(-1,0)))
+		if fila_r < fila_t:
+			#Abajo
+			if (fila_r + 1 , col_r) not in PEONES and (muerte_rey((fila_r + 1,col_r))):
+				actions.append(('Abajo',(1,0)))
+		if col_r > 0:
+			#Derecha
+			if (fila_r , col_r - 1) not in PEONES and (muerte_rey((fila_r, col_r - 1))):
+				actions.append(('Izquierda',(0,-1)))
+		if col_r < col_t:
+			## Izquierda
+			if (fila_r ,col_r + 1) not in PEONES and (muerte_rey((fila_r, col_r + 1))):
+				actions.append(('Derecha',(0,1)))
 		return actions
-		
-	def result(self, state, action):
 
-## for i,x in enumerate(state_to_board(INITIAL)):
-##	if (i == INITIALFILA):
-##		print(x.index(INITIALCOLUMNA))
-##		for j,a in enumerate(x):
-##			if (j == INITIALCOLUMNA):
-##				if (a == '1'):
-##					print('La ubicacion hay que regenerarla', INITIALFILA,INITIALCOLUMNA)
+	def result(self, state, actions):
+		fila_r,col_r = state
+		return (fila_r + actions[1][0], col_r + actions[1][1])
 
-problema = problema()
-print(problema.is_goal(INITIAL))
+	def cost(self, state1, action, state2):
+		return 1
 
-# FALTA TODAVIA
-# 2- Heuristica
-# 3- metodo results
-# 1- controlar actions
+	def heuristic(self, state):
+		fila_r,col_r = state 
+		heuristica =[fila_r, col_r , (fila_t - fila_r) , (col_t - col_r)]
+		return min(heuristica)
+
+
+def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
+	problema = HnefataflProblema(posicion_rey)
+	visor = BaseViewer()
+	#Busquedas, Grafo -> graph_search=True
+	if (metodo_busqueda == 'breadth_first'): # En amplitud
+		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'depth_first'): # Profundidad
+		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'greedy'): # Avara
+		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'astar'): # Estrella
+		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	print(visor.stats)
+	return resultado
+
+
 
