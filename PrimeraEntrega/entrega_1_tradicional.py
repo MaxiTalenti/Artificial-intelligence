@@ -8,7 +8,7 @@ PEONES = [(0,0),(0,2),(0,4),(0,6),(1,4),(2,0),(3,1),(3,6),(3,7),(3,9),(4,0),(4,7
 
 fila_t,col_t = (9,9) #TAMAÑO TABLERO
 
-def muerte_rey(state): #LISTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+def muerte_rey(state):
 	fila_r,col_r = state 
 
 	cant_peones = 0 
@@ -16,22 +16,18 @@ def muerte_rey(state): #LISTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 		## Verificar si existe peon arriba
 		if (fila_r - 1, col_r) in PEONES:
 			cant_peones=cant_peones + 1
-			#######################print ('Arriba hay peon', fila-1, col)
 	if fila_r < fila_t:
 		## Verificar si existe peon abajo
 		if (fila_r + 1, col_r) in PEONES:
 			cant_peones=cant_peones + 1
-			#######################print ('Abajo hay peon', fila + 1, col)
 	if col_r > 0:
 		## Verificar si existe peon a la iqzuierda
 		if (fila_r, col_r -1) in PEONES:
 			cant_peones=cant_peones + 1
-			#######################print ('A la izquierda hay peon', fila, col -1)
 	if col_r < col_t:
 		## Verificar si existe peon a la derecha
 		if (fila_r, col_r + 1) in PEONES:
 			cant_peones=cant_peones + 1
-			#######################print ('A la derecha hay peon', fila, col + 1)
 	if cant_peones >=2:
 		return False
 	else:
