@@ -12,29 +12,21 @@ def muerte_rey(state):
 	fila_r,col_r = state 
 
 	cant_peones = 0 
-	if fila_r > 0: 
-		## Verificar si existe peon arriba
+	if fila_r > 0: # Verificar si existe peon arriba
 		if (fila_r - 1, col_r) in PEONES:
 			cant_peones=cant_peones + 1
-	if fila_r < fila_t:
-		## Verificar si existe peon abajo
+	if fila_r < fila_t: # Verificar si existe peon abajo
 		if (fila_r + 1, col_r) in PEONES:
 			cant_peones=cant_peones + 1
-	if col_r > 0:
-		## Verificar si existe peon a la iqzuierda
+	if col_r > 0: # Verificar si existe peon a la iqzuierda
 		if (fila_r, col_r -1) in PEONES:
 			cant_peones=cant_peones + 1
-	if col_r < col_t:
-		## Verificar si existe peon a la derecha
+	if col_r < col_t: # Verificar si existe peon a la derecha
 		if (fila_r, col_r + 1) in PEONES:
 			cant_peones=cant_peones + 1
-	if cant_peones >=2:
-		return False
-	else:
-		return True
+	return cant_peones < 2
 
 class HnefataflProblema(SearchProblem):
-
 	def is_goal(self, state):
 		fila_r,col_r = state
 		return (fila_r in [0,9] or col_r in [0,9])
@@ -42,20 +34,16 @@ class HnefataflProblema(SearchProblem):
 	def actions(self, state):
 		fila_r, col_r = state
 		actions = []
-		if fila_r > 0: 
-			#Arriba
+		if fila_r > 0: # Arriba
 			if (fila_r - 1, col_r) not in PEONES and (muerte_rey((fila_r - 1,col_r))):
 				actions.append(('Arriba',(-1,0)))
-		if fila_r < fila_t:
-			#Abajo
+		if fila_r < fila_t: # Abajo
 			if (fila_r + 1 , col_r) not in PEONES and (muerte_rey((fila_r + 1,col_r))):
 				actions.append(('Abajo',(1,0)))
-		if col_r > 0:
-			#Derecha
+		if col_r > 0: # Derecha
 			if (fila_r , col_r - 1) not in PEONES and (muerte_rey((fila_r, col_r - 1))):
 				actions.append(('Izquierda',(0,-1)))
-		if col_r < col_t:
-			## Izquierda
+		if col_r < col_t: # Izquierda
 			if (fila_r ,col_r + 1) not in PEONES and (muerte_rey((fila_r, col_r + 1))):
 				actions.append(('Derecha',(0,1)))
 		return actions
@@ -71,7 +59,6 @@ class HnefataflProblema(SearchProblem):
 		fila_r,col_r = state 
 		heuristica =[fila_r, col_r , (fila_t - fila_r) , (col_t - col_r)]
 		return min(heuristica)
-
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = HnefataflProblema(posicion_rey)
