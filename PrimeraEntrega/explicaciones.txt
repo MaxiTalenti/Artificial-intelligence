@@ -1,2 +1,0 @@
-4: Las busquedas en profundidad no son óptimas cuando se realizan en árbol. Además superó la hora de ejecución.
-6: Las busquedas en amplitud en Avara superó la hora de ejecución.
