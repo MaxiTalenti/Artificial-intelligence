@@ -1,13 +1,21 @@
 # coding=utf-8
-from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, astar
+from simpleai.search import SearchProblem, hill_climbing, hill_climbing_random_restarts, beam, hill_climbing_stochastic, simulated_annealing
 from simpleai.search.viewers import ConsoleViewer, BaseViewer
 import random
 
 INITIAL = [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(1,0),(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),
 			(1,9),(2,0),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,8),(2,9)]
+APuntos = []
+
+def grabarvalue(busqueda, value):
+    #archi=open('datos.txt','w') # crea el archivo de nuevo
+    archi=open('datos.txt', 'a')
+    archi.write('{};{}\n'.format(busqueda,value))
+    archi.close()
 
 class problema(SearchProblem):
 	def generate_random_state(self):
+		print 'generate random state'
 		Tuplas = []
 		while len(Tuplas) < 30:
 			TuplaAComprobar = (random.randint(0,9),random.randint(0,9))
@@ -16,34 +24,45 @@ class problema(SearchProblem):
 		return Tuplas
 
 	def actions(self, state):	
+		print '### actions'
 		Vacios = []
 		Acciones = []
-		cant = 0
+		cantidad = 0
 		for columna in range(10):
 			for fila in range(10):
 				if (columna,fila) not in state:
 					Vacios.append((columna,fila))
 		for i in state:
 			for j in Vacios:
-				Acciones.append([i,j])	
-				cant = cant + 1	
-		return Acciones,cant
+				Acciones.append([i,j])
+				cantidad = cantidad + 1	
+		#return Acciones,cantidad
+		#print Acciones
+		return Acciones
 
-
-# 	def result(self,state,action):
+	def result(self,state,action): #[(2, 8), (8, 6)]
+		print 'result'
+		print 'accion en result', action
+		[(a,b),(c,d)] = action
+		print 'state en result', state
+		print 'Va a a quitar', (a,b)
+		print 'Lo mueve a', (c,d)
+		state.remove((a,b))
+		state.append((c,d))
+		return state
 # 		 '''Returns the resulting state of applying `action` to `state`.'''
 		
 	def value(self, state):
+		print 'value'
 		CamposVacios = []
-		for x in xrange(0, 10): # Obtiene una lista de tuplas con todos los campos vacios.
-			for y in xrange(0,10):
+		PuntosTotal = 0
+		for x in range(10): # Obtiene una lista de tuplas con todos los campos vacios.
+			for y in range(10):
 				if (x,y) not in state:
 					CamposVacios.append((x,y))
-		PuntosTotal = 0
 		for x in CamposVacios: # Verifica por cada campo vacio si tiene peones en arriba, abajo, izq o derecha
 			Puntos = 0
 			z, y = x
-			print ((z,y))
 			if z > 0: #Arriba
 				if (z - 1, y) in state:
 					Puntos = 1
@@ -57,17 +76,48 @@ class problema(SearchProblem):
 				if (z ,y + 1) in state:
 					Puntos = Puntos + 1
 			if Puntos > 1:
-				if z == 0 or y == 0 or z == 9 or y == 9:
+				if z in (0,9) or y in (0,9):
 					PuntosTotal = PuntosTotal + 3
 				else:
 					PuntosTotal = PuntosTotal + 1
+		APuntos.append(PuntosTotal)
 		return PuntosTotal
 
-# def resolver(metodo_busqueda, iteraciones, haz, reinicios):
-# 	print('A')
 
-a = problema(INITIAL)
-print('RANDOM')
-print(a.generate_random_state())
-print('ACTIONS')
-print(a.actions(INITIAL))
+def resolver(metodo_busqueda,iteraciones,haz,reinicios):
+	print 'Iteraciones:', iteraciones
+	#print 'Haz:', haz
+	#print 'Reinicios:', reinicios
+	prob = problema(INITIAL)
+	visor = BaseViewer()
+	if (metodo_busqueda == 'hill_climbing'): # Ascenso de colina
+		resultado = hill_climbing(prob, iteraciones)
+		grabarvalue('hill_climbing', max(APuntos))
+	elif (metodo_busqueda == 'hill_climbing_stochastic'): # Ascenso de colina, variante estocástica
+		resultado = hill_climbing_stochastic(prob, iteraciones)
+	elif (metodo_busqueda == 'beam'): # Haz local
+		resultado = beam(prob, iteraciones, haz) # haz, iteraciones
+	elif (metodo_busqueda == 'hill_climbing_random_restarts'): # Ascenso de colina con reinicios aleatorios
+		resultado = hill_climbing_random_restarts(prob, iteraciones, reinicios) # reinicios, iteraciones
+	elif (metodo_busqueda == 'simulated_annealing'): # Temple simulado
+		resultado = simulated_annealing(prob, iteraciones)
+	print(visor.stats)
+	APuntos = []
+	return resultado
+
+if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
+	a = problema(INITIAL)
+	#print 'RANDOM'
+	#print a.generate_random_state()
+	print 'ACTIONS'
+	print a.actions(INITIAL)
+	#print 'Puntos:', a.value(INITIAL)
+	#print 'Result:', a.result(INITIAL, [(1, 4), (9, 8)])
+	#print INITIAL
+	#print 'Puntos con el movimiento:', a.value(INITIAL)
+	print '############ RESOLVIENDO ###########'
+	resolver('hill_climbing',50,None,None)
+	#resolver('hill_climbing_stochastic', 50,None,None)
+    #resolver('beam', 50,5,None)
+    #resolver('hill_climbing_random_restarts', 50,None,5)
+    #resolver('simulated_annealing',50,None,None)
