@@ -50,16 +50,16 @@ class HnefataflProblema(SearchProblem):
 			#Arriba
 			if (fila_r - 1, col_r) not in PEONES and (muerte_rey((fila_r - 1,col_r))):
 				actions.append(('Arriba',(-1,0)))
-		if fila_r < fila_t:
+		if fila_r < 9:
 			#Abajo
 			if (fila_r + 1 , col_r) not in PEONES and (muerte_rey((fila_r + 1,col_r))):
 				actions.append(('Abajo',(1,0)))
 		if col_r > 0:
-			#Derecha
+			#Izquierda
 			if (fila_r , col_r - 1) not in PEONES and (muerte_rey((fila_r, col_r - 1))):
 				actions.append(('Izquierda',(0,-1)))
-		if col_r < col_t:
-			## Izquierda
+		if col_r < 9:
+			#Derecha
 			if (fila_r ,col_r + 1) not in PEONES and (muerte_rey((fila_r, col_r + 1))):
 				actions.append(('Derecha',(0,1)))
 		return actions
