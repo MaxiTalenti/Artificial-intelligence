@@ -120,4 +120,8 @@ if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
 	#resolver('hill_climbing_stochastic', 50,None,None)
     #resolver('beam', 50,5,None)
     #resolver('hill_climbing_random_restarts', 50,None,5)
+<<<<<<< HEAD
     #resolver('simulated_annealing',50,None,None)
+=======
+    #resolver('simulated_annealing',50,None,None)
+>>>>>>> origin/master
