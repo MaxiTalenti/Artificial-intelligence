@@ -5,13 +5,18 @@ import random
 
 INITIAL = [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(1,0),(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),
 			(1,9),(2,0),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(2,8),(2,9)]
-APuntos = []
 
-def grabarvalue(busqueda, value):
-    #archi=open('datos.txt','w') # crea el archivo de nuevo
-    archi=open('datos.txt', 'a')
-    archi.write('{};{}\n'.format(busqueda,value))
-    archi.close()
+apuntos = []
+
+def sumarValue(value):
+    apuntos.append(value)
+    print 'asdasdaasdsadds', apuntos
+
+def grabar(busqueda, valor):
+	archi=open('datos.txt','a')
+	archi.write('{};{}\n'.format(busqueda, valor))
+	archi.close()
+	apuntos = []
 
 class problema(SearchProblem):
 	def generate_random_state(self):
@@ -27,7 +32,6 @@ class problema(SearchProblem):
 		print '### actions'
 		Vacios = []
 		Acciones = []
-		cantidad = 0
 		for columna in range(10):
 			for fila in range(10):
 				if (columna,fila) not in state:
@@ -35,20 +39,19 @@ class problema(SearchProblem):
 		for i in state:
 			for j in Vacios:
 				Acciones.append([i,j])
-				cantidad = cantidad + 1	
 		#return Acciones,cantidad
 		#print Acciones
 		return Acciones
 
 	def result(self,state,action): #[(2, 8), (8, 6)]
-		print 'result'
-		print 'accion en result', action
 		[(a,b),(c,d)] = action
-		print 'state en result', state
-		print 'Va a a quitar', (a,b)
-		print 'Lo mueve a', (c,d)
-		state.remove((a,b))
-		state.append((c,d))
+		if (a,b) in state:	
+			print 'accion en result', action
+			print 'state en result', state
+			print 'Va a a quitar', (a,b)
+			print 'Lo mueve a', (c,d)
+			state.remove((a,b))
+			state.append((c,d))
 		return state
 # 		 '''Returns the resulting state of applying `action` to `state`.'''
 		
@@ -80,7 +83,7 @@ class problema(SearchProblem):
 					PuntosTotal = PuntosTotal + 3
 				else:
 					PuntosTotal = PuntosTotal + 1
-		APuntos.append(PuntosTotal)
+		sumarValue(PuntosTotal)
 		return PuntosTotal
 
 
@@ -92,7 +95,7 @@ def resolver(metodo_busqueda,iteraciones,haz,reinicios):
 	visor = BaseViewer()
 	if (metodo_busqueda == 'hill_climbing'): # Ascenso de colina
 		resultado = hill_climbing(prob, iteraciones)
-		grabarvalue('hill_climbing', max(APuntos))
+		grabar('hill_climbing', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_stochastic'): # Ascenso de colina, variante estocástica
 		resultado = hill_climbing_stochastic(prob, iteraciones)
 	elif (metodo_busqueda == 'beam'): # Haz local
@@ -102,7 +105,6 @@ def resolver(metodo_busqueda,iteraciones,haz,reinicios):
 	elif (metodo_busqueda == 'simulated_annealing'): # Temple simulado
 		resultado = simulated_annealing(prob, iteraciones)
 	print(visor.stats)
-	APuntos = []
 	return resultado
 
 if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
@@ -120,8 +122,6 @@ if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
 	#resolver('hill_climbing_stochastic', 50,None,None)
     #resolver('beam', 50,5,None)
     #resolver('hill_climbing_random_restarts', 50,None,5)
-<<<<<<< HEAD
     #resolver('simulated_annealing',50,None,None)
-=======
-    #resolver('simulated_annealing',50,None,None)
->>>>>>> origin/master
+
+
