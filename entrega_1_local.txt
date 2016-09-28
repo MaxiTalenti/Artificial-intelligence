@@ -1,4 +1,5 @@
-hill_climbing;17
-hill_climbing_stochastic;16
-beam;68
-hill_climbing_random_restarts;65
+1:17
+2:23
+3:76
+4:74
+5:31
