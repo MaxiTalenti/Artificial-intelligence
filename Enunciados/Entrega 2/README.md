@@ -46,7 +46,7 @@ El módulo debe tener una función llamada `resolver`, que reciba los siguientes
 * `haz`: un número entero indicando el tamaño del haz para la búsqueda de haz local (para las demás búsquedas, el parámetro recibirá un None).
 * `reinicios`: un número entero indicando la cantidad de reinicios para la búsqueda de ascenso de colina con reinicios aleatorios (para las demás búsquedas, el parámetro recibirá un `None`).
 
-Al llamar a esta función, se debe ejecutar la búsqueda especificada y devolver el **nodo resultante (lo que devuelve el método de búsqueda de SimpleAI).
+Al llamar a esta función, se debe ejecutar la búsqueda especificada y devolver el **nodo resultante** (lo que devuelve el método de búsqueda de SimpleAI).
 
 Las estadísticas deben subirse también al repositorio en un archivo llamado `entrega_1_local.txt` con una linea por cada caso, con el siguiente formato para cada una:
 numero_de_caso:mejor_puntaje_obtenido
@@ -61,7 +61,7 @@ numero_de_caso:mejor_puntaje_obtenido
 
 > ...
 
-En esta entrega, **ninguno de los métodos debería bloquearse en un bucle infinito o quedarse sin memoria. Lo peor que puede suceder es que demore demasiado por haberlo programado de alguna forma excesivamente compleja.
+En esta entrega, **ninguno** de los métodos debería bloquearse en un bucle infinito o quedarse sin memoria. Lo peor que puede suceder es que demore demasiado por haberlo programado de alguna forma excesivamente compleja.
 
 **Respetar** nombres de archivos, funciones, parámetros y tipos de datos **exáctamente** como se dicen en este enunciado. Cualquier falla por no respetar la interfaz definida, se considera no entregado.
 
