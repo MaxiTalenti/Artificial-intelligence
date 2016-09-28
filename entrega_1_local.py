@@ -13,11 +13,11 @@ def sumarValue(value):
 
 def grabar(busqueda, valor):
 	archi=open('entrega_1_local.txt','a')
-	archi.write('{};{}\n'.format(busqueda, valor))
+	archi.write('{}:{}\n'.format(busqueda, valor))
 	archi.close()
 	apuntos[:] = []
 
-class HnefataflProblem(SearchProblem):
+class problema(SearchProblem):
 	def generate_random_state(self):
 		Tuplas = []
 		while len(Tuplas) < 30:
@@ -86,31 +86,37 @@ class HnefataflProblem(SearchProblem):
 		sumarValue(PuntosTotal)
 		return PuntosTotal
 
+def temperatura(self,iteracion):
+	t = 100 - iteracion 
+	if t <= 0:
+		t = 0.01
+	return t
+
 def resolver(metodo_busqueda,iteraciones,haz,reinicios):
-	print 'Iteraciones:', iteraciones
+	print '··· Se van a ejecutar las 10 iteraciones por búsqueda ···'
 	#print 'Haz:', haz
 	#print 'Reinicios:', reinicios
-	prob = HnefataflProblem(INITIAL)
+	prob = problema(INITIAL)
 	visor = BaseViewer()
 	if (metodo_busqueda == 'hill_climbing'): # Ascenso de colina
-		resultado = hill_climbing(problem = prob, iterations_limit = iteraciones)
+		resultado = hill_climbing(prob, iterations_limit=iteraciones)
 		grabar('hill_climbing', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_stochastic'): # Ascenso de colina, variante estocástica
-		resultado = hill_climbing_stochastic(problem = prob, iterations_limit = iteraciones)
+		resultado = hill_climbing_stochastic(prob, iterations_limit=iteraciones)
 		grabar('hill_climbing_stochastic', max(apuntos))
 	elif (metodo_busqueda == 'beam'): # Haz local
-		resultado = beam(problem = HnefataflProblem(None), iterations_limit = iteraciones, beam_size = haz)
+		resultado = beam(prob, iterations_limit=iteraciones, haz) # haz, iteraciones
 		grabar('beam', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_random_restarts'): # Ascenso de colina con reinicios aleatorios
-		resultado = hill_climbing_random_restarts(problem = HnefataflProblem(None), iterations_limit = iteraciones, restarts_limit = reinicios)
+		resultado = hill_climbing_random_restarts(prob, iterations_limit=iteraciones, reinicios) # reinicios, iteraciones
 		grabar('hill_climbing_random_restarts', max(apuntos))
 	elif (metodo_busqueda == 'simulated_annealing'): # Temple simulado
-		resultado = simulated_annealing(problem = prob, iterations_limit = iteraciones)
+		resultado = simulated_annealing(prob, iterations_limit=iteraciones,schedule=temperatura)
 		grabar('simulated_annealing', max(apuntos))
 	return resultado
 
 if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
-	a = HnefataflProblem(INITIAL)
+	a = problema(INITIAL)
 	print 'ACTIONS'
 	print a.actions(INITIAL)
 	print '############ RESOLVIENDO ###########'
