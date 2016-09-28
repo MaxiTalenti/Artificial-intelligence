@@ -1,0 +1,4 @@
+hill_climbing;17
+hill_climbing_stochastic;16
+beam;68
+hill_climbing_random_restarts;65

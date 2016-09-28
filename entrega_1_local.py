@@ -10,17 +10,15 @@ apuntos = []
 
 def sumarValue(value):
     apuntos.append(value)
-    print 'asdasdaasdsadds', apuntos
 
 def grabar(busqueda, valor):
-	archi=open('datos.txt','a')
+	archi=open('entrega_1_local.txt','a')
 	archi.write('{};{}\n'.format(busqueda, valor))
 	archi.close()
-	apuntos = []
+	apuntos[:] = []
 
 class problema(SearchProblem):
 	def generate_random_state(self):
-		print 'generate random state'
 		Tuplas = []
 		while len(Tuplas) < 30:
 			TuplaAComprobar = (random.randint(0,9),random.randint(0,9))
@@ -29,34 +27,36 @@ class problema(SearchProblem):
 		return Tuplas
 
 	def actions(self, state):	
-		print '### actions'
-		Vacios = []
 		Acciones = []
-		for columna in range(10):
-			for fila in range(10):
-				if (columna,fila) not in state:
-					Vacios.append((columna,fila))
 		for i in state:
-			for j in Vacios:
-				Acciones.append([i,j])
-		#return Acciones,cantidad
-		#print Acciones
+			fila,col = i
+			if fila > 0: 
+			#Arriba
+				if (fila - 1, col) not in state:
+					Acciones.append([(fila,col),(fila - 1, col)])#primero posicion luego posible movimiento
+			if fila < 9:
+			#Abajo
+				if (fila + 1 , col) not in state:
+					Acciones.append([(fila,col),(fila + 1, col)])
+			if col > 0:
+				#Derecha
+				if (fila , col - 1) not in state:
+					Acciones.append([(fila,col),(fila, col  - 1)])
+			if col < 9:
+				## Izquierda
+				if (fila ,col + 1) not in state:
+					Acciones.append([(fila,col),(fila, col + 1)])
 		return Acciones
 
 	def result(self,state,action): #[(2, 8), (8, 6)]
 		[(a,b),(c,d)] = action
-		if (a,b) in state:	
-			print 'accion en result', action
-			print 'state en result', state
-			print 'Va a a quitar', (a,b)
-			print 'Lo mueve a', (c,d)
-			state.remove((a,b))
-			state.append((c,d))
-		return state
+		statenuevo = state[:]
+		statenuevo.remove((a,b))
+		statenuevo.append((c,d))
+		return statenuevo
 # 		 '''Returns the resulting state of applying `action` to `state`.'''
 		
 	def value(self, state):
-		print 'value'
 		CamposVacios = []
 		PuntosTotal = 0
 		for x in range(10): # Obtiene una lista de tuplas con todos los campos vacios.
@@ -86,6 +86,11 @@ class problema(SearchProblem):
 		sumarValue(PuntosTotal)
 		return PuntosTotal
 
+def temperatura(self,iteracion):
+	t = 100 - iteracion 
+	if t <= 0:
+		t = 0.01
+	return t
 
 def resolver(metodo_busqueda,iteraciones,haz,reinicios):
 	print 'Iteraciones:', iteraciones
@@ -94,34 +99,29 @@ def resolver(metodo_busqueda,iteraciones,haz,reinicios):
 	prob = problema(INITIAL)
 	visor = BaseViewer()
 	if (metodo_busqueda == 'hill_climbing'): # Ascenso de colina
-		resultado = hill_climbing(prob, iteraciones)
+		resultado = hill_climbing(prob, iterations_limit=iteraciones)
 		grabar('hill_climbing', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_stochastic'): # Ascenso de colina, variante estocástica
-		resultado = hill_climbing_stochastic(prob, iteraciones)
+		resultado = hill_climbing_stochastic(prob, iterations_limit=iteraciones)
+		grabar('hill_climbing_stochastic', max(apuntos))
 	elif (metodo_busqueda == 'beam'): # Haz local
-		resultado = beam(prob, iteraciones, haz) # haz, iteraciones
+		resultado = beam(prob, iterations_limit=iteraciones, haz) # haz, iteraciones
+		grabar('beam', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_random_restarts'): # Ascenso de colina con reinicios aleatorios
-		resultado = hill_climbing_random_restarts(prob, iteraciones, reinicios) # reinicios, iteraciones
+		resultado = hill_climbing_random_restarts(prob, iterations_limit=iteraciones, reinicios) # reinicios, iteraciones
+		grabar('hill_climbing_random_restarts', max(apuntos))
 	elif (metodo_busqueda == 'simulated_annealing'): # Temple simulado
-		resultado = simulated_annealing(prob, iteraciones)
-	print(visor.stats)
+		resultado = simulated_annealing(prob, iterations_limit=iteraciones,schedule=temperatura)
+		grabar('simulated_annealing', max(apuntos))
 	return resultado
 
 if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
 	a = problema(INITIAL)
-	#print 'RANDOM'
-	#print a.generate_random_state()
 	print 'ACTIONS'
 	print a.actions(INITIAL)
-	#print 'Puntos:', a.value(INITIAL)
-	#print 'Result:', a.result(INITIAL, [(1, 4), (9, 8)])
-	#print INITIAL
-	#print 'Puntos con el movimiento:', a.value(INITIAL)
 	print '############ RESOLVIENDO ###########'
 	resolver('hill_climbing',50,None,None)
 	#resolver('hill_climbing_stochastic', 50,None,None)
     #resolver('beam', 50,5,None)
     #resolver('hill_climbing_random_restarts', 50,None,5)
     #resolver('simulated_annealing',50,None,None)
-
-
