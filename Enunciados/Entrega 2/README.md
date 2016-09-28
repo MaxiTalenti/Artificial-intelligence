@@ -6,7 +6,7 @@ HHnefatafl es un antiguo juego que los vikingos jugaban en Inteligencia Artifici
 Como los soldados no pueden moverse, lo que trataremos de resolver en esta entrega es el problema de encontrar la mejor distribución posible para nuestros soldados. Una distribución "buena" es aquella que le complica la escapatoria al rey, mientras que una "mala" distribución es aquella en la que el rey puede escapar muy fácilmente.
 Para evaluar qué tan buena es una distribución, usaremos la siguiente lógica:
 
-* Si un casillero tiene uno o ningún soldado atacándolo (adyacente), entonces ese casillero **no suma puntos.
+* Si un casillero tiene uno o ningún soldado atacándolo (adyacente), entonces ese casillero **no suma puntos.**
 * Si un casillero es atacado por más de un soldado, y no es un casillero de los bordes, entonces ese casillero suma **1 punto.**
 * Si un casillero es atacado por más de un soldado, y además se encuentra en un borde, entonces ese casillero suma **3 puntos.**
 * Los casilleros con soldados dentro **no suman puntos.**
