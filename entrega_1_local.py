@@ -1,6 +1,7 @@
 # coding=utf-8
 from simpleai.search import SearchProblem, hill_climbing, hill_climbing_random_restarts, beam, hill_climbing_stochastic, simulated_annealing
 from simpleai.search.viewers import ConsoleViewer, BaseViewer
+from datetime import datetime
 import random
 
 INITIAL = [(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(1,0),(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),
@@ -17,7 +18,7 @@ def grabar(busqueda, valor):
 	archi.close()
 	apuntos[:] = []
 
-class problema(SearchProblem):
+class HnefataflProblem(SearchProblem):
 	def generate_random_state(self):
 		Tuplas = []
 		while len(Tuplas) < 30:
@@ -33,7 +34,7 @@ class problema(SearchProblem):
 			if fila > 0: 
 			#Arriba
 				if (fila - 1, col) not in state:
-					Acciones.append([(fila,col),(fila - 1, col)])#primero posicion luego posible movimiento
+					Acciones.append([(fila,col),(fila - 1, col)]) # Primero posicion luego posible movimiento
 			if fila < 9:
 			#Abajo
 				if (fila + 1 , col) not in state:
@@ -86,37 +87,56 @@ class problema(SearchProblem):
 		sumarValue(PuntosTotal)
 		return PuntosTotal
 
-def temperatura(self,iteracion):
-	t = 100 - iteracion 
-	if t <= 0:
-		t = 0.01
-	return t
-
 def resolver(metodo_busqueda,iteraciones,haz,reinicios):
-	print '··· Se van a ejecutar las 10 iteraciones por búsqueda ···'
+	print '··· Se van a ejecutar las 10 iteraciones para la busqueda {} ···'.format(metodo_busqueda)
 	#print 'Haz:', haz
 	#print 'Reinicios:', reinicios
-	prob = problema(INITIAL)
+	prob = HnefataflProblem(INITIAL)
 	visor = BaseViewer()
 	if (metodo_busqueda == 'hill_climbing'): # Ascenso de colina
-		resultado = hill_climbing(prob, iterations_limit=iteraciones)
-		grabar('hill_climbing', max(apuntos))
+		for x in range(10):
+			print 'Ejecutando Iteracion {} ...'.format(x)
+			inicio = datetime.now()
+			resultado = hill_climbing(problem = prob, iterations_limit = iteraciones)
+			fin = datetime.now()
+			print 'Tiempo de iteracion {} : {} segundos.'.format(x, (fin - inicio).total_seconds())
+		grabar('1', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_stochastic'): # Ascenso de colina, variante estocástica
-		resultado = hill_climbing_stochastic(prob, iterations_limit=iteraciones)
-		grabar('hill_climbing_stochastic', max(apuntos))
+		for x in range(10):
+			print 'Ejecutando Iteracion {} ...'.format(x)
+			inicio = datetime.now()
+			resultado = hill_climbing_stochastic(problem = prob, iterations_limit = iteraciones)
+			fin = datetime.now()
+			print 'Tiempo de iteracion {} : {} segundos.'.format(x, (fin - inicio).total_seconds())
+		grabar('2', max(apuntos))
 	elif (metodo_busqueda == 'beam'): # Haz local
-		resultado = beam(prob, iterations_limit=iteraciones, haz) # haz, iteraciones
-		grabar('beam', max(apuntos))
+		for x in range(10):
+			print 'Ejecutando Iteracion {} ...'.format(x)
+			inicio = datetime.now()
+			resultado = beam(problem = HnefataflProblem(None), iterations_limit = iteraciones, beam_size = haz)
+			fin = datetime.now()
+			print 'Tiempo de iteracion {} : {} segundos.'.format(x, (fin - inicio).total_seconds())
+		grabar('3', max(apuntos))
 	elif (metodo_busqueda == 'hill_climbing_random_restarts'): # Ascenso de colina con reinicios aleatorios
-		resultado = hill_climbing_random_restarts(prob, iterations_limit=iteraciones, reinicios) # reinicios, iteraciones
-		grabar('hill_climbing_random_restarts', max(apuntos))
+		for x in range(10):
+			print 'Ejecutando Iteracion {} ...'.format(x)
+			inicio = datetime.now()
+			resultado = hill_climbing_random_restarts(problem = HnefataflProblem(None), iterations_limit = iteraciones, restarts_limit = reinicios)
+			fin = datetime.now()
+			print 'Tiempo de iteracion {} : {} segundos.'.format(x, (fin - inicio).total_seconds())
+		grabar('4', max(apuntos))
 	elif (metodo_busqueda == 'simulated_annealing'): # Temple simulado
-		resultado = simulated_annealing(prob, iterations_limit=iteraciones,schedule=temperatura)
-		grabar('simulated_annealing', max(apuntos))
+		for x in range(10):
+			print 'Ejecutando Iteracion {} ...'.format(x)
+			inicio = datetime.now()
+			resultado = simulated_annealing(problem = prob, iterations_limit = iteraciones)
+			fin = datetime.now()
+			print 'Tiempo de iteracion {} : {} segundos.'.format(x, (fin - inicio).total_seconds())
+		grabar('5', max(apuntos))
 	return resultado
 
 if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
-	a = problema(INITIAL)
+	a = HnefataflProblem(INITIAL)
 	print 'ACTIONS'
 	print a.actions(INITIAL)
 	print '############ RESOLVIENDO ###########'
@@ -125,3 +145,6 @@ if __name__ == '__main__': # Se ejecuta esto si no se llama desde consola
     #resolver('beam', 50,5,None)
     #resolver('hill_climbing_random_restarts', 50,None,5)
     #resolver('simulated_annealing',50,None,None)
+
+if __name__ != '__main__':
+		archi=open('entrega_1_local.txt','w') # Va a generar el archivo de nuevo pisandolo si ya existe.
