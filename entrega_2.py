@@ -22,31 +22,43 @@ def ubicacion_motores(var, val): # Los motores solo pueden ubicarse en los slots
     return True
 
 def cabinas_motores(var, val): # Las cabinas no pueden estar conectadas a los motores
-    return not (('Cabinas para tripulantes') in val and ('Motores') in val)
-    # Verificar que el primero esta conectado al resto, no el segundo con el tercero!
+    if ('Cabinas para tripulantes') in val[0]:
+        return not (('Motores') in val)
+    if ('Motores') in val[0]:
+        return not (('Cabinas para tripulantes') in val)
+    return True
 
-def cabinas_lasers(var, val): # No puede haber baterías conectadas a lasers.
-    return not (('Cabinas para tripulantes') in val and ('Lasers') in val)
-    # Verificar que el primero esta conectado al resto, no el segundo con el tercero!
+def baterias_lasers(var, val): # No puede haber baterías conectadas a lasers.
+    if ('Baterias') in val[0]:
+        return not (('Lasers') in val)
+    if ('Lasers') in val[0]:
+        return not (('Baterias') in val)
+    return True
 
 def sist_cabinas(var, val): # Los sistemas de vida extraterrestre sí o sí tienen que ubicarse conectados a cabinas.
-    print val, (('Cabinas para tripulantes') in val and ('Sistemas de vida extraterrestres') in val)
-    return (('Cabinas para tripulantes') in val and ('Sistemas de vida extraterrestres') in val)
-    # Verificar que el primero esta conectado al resto, no el segundo con el tercero!
+    if (('Cabinas para tripulantes') in val[0]):
+        return ('Sistemas de vida extraterrestres') in val
+    if (('Sistemas de vida extraterrestres') in val[0]):
+        return ('Cabinas para tripulantes') in val
+    return True
 
 def sist_escudos(var, val): # Los escudos y los sistemas de vida extraterrestre no pueden estar conectados entre si.
-    if ('Sistemas de vida extraterrestre') in val and ('Escudos') in val:
-        return esta_desconectados(var[0],var[1])
+    if ('Sistemas de vida extraterrestres') in val[0]:
+        return not (('Escudos') in val)
+    if ('Escudos') in val[0]:
+        return not (('Sistemas de vida extraterrestres') in val)
     return True
 
 def bahias_cabinas(var, val): # Las bahías de carga tienen que tener al menos una cabina conectada.
-    if ('Bahias de carga') in val and ('Cabinas para tripulantes') in val:
-        return not esta_desconectados(var[0], var[1])
+    if ('Bahias de carga') in val[0]:
+        return ('Cabinas para tripulantes') in val
+    if ('Cabinas para tripulantes') in val[0]:
+        return ('Bahias de carga') in val
     return True
 
 def baterias(var, val): # Las baterías tienen que tener al menos dos sistemas conectados: Lasers, Cabinas de tripulantes, Escudos y Sistemas de vida extraterrestre.
-    if ('Baterias') in val:
-        return (val.count('Lasers') + val.count('Cabinas de tripulantes') + val.count('Escudos') + val.count('Sistemas de vida extraterrestre')) >= 2
+    if ('Baterias') in val[0]:
+        return (val.count('Lasers') + val.count('Cabinas de tripulantes') + val.count('Escudos') + val.count('Sistemas de vida extraterrestres')) >= 2
     return True
 
 def usar_todos(var, val): # Usar todos los modulos
@@ -56,18 +68,11 @@ for a in vecinos:
     restricciones.append((a, modulos_diferentes))
     restricciones.append((a, ubicacion_motores))
     restricciones.append((a, cabinas_motores))
-    restricciones.append((a, cabinas_lasers))
+    restricciones.append((a, baterias_lasers))
     restricciones.append((a, sist_cabinas))
-
-#for var1, var2 in itertools.combinations(variables, 2):
-    #restricciones.append(((var1,var2),modulos_diferentes))
-    #restricciones.append(((var1,var2),ubicacion_motores))
-    #restricciones.append(((var1,var2),cabinas_motores))
-    #restricciones.append(((var1,var2),cabinas_lasers))
-    #restricciones.append(((var1,var2),sist_cabinas))
-    #restricciones.append(((var1,var2),sist_escudos))
-    #restricciones.append(((var1,var2),bahias_cabinas))
-    #restricciones.append(((var1,var2),baterias))
+    restricciones.append((a, sist_escudos))
+    restricciones.append((a, bahias_cabinas))
+    restricciones.append((a, baterias))
 
 restricciones.append((variables, usar_todos))
 
@@ -75,13 +80,21 @@ def resolver(metodo_busqueda, iteraciones):
     problem = CspProblem(variables, dominios, restricciones)
     if metodo_busqueda == 'backtrack':
         resultado = backtrack(problem = problem)
-        print resultado
+        grabar('1', resultado, iteraciones = iteraciones)
         #def backtrack(problem, variable_heuristic='', value_heuristic='', inference=True):
     if metodo_busqueda == 'min_conflicts':
         resultado = min_conflicts(problem = problem, iterations_limit = iteraciones)
-        print resultado
+        print iteraciones, resultado
+        grabar('2', resultado, iteraciones = iteraciones)
         #def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
+
+def grabar(busqueda, valor, iteraciones):
+	archi=open('entrega_2.txt','a')
+	archi.write('{}:{} Iteraciones: {}\n'.format(busqueda, valor, iteraciones))
+	archi.close()
 
 if __name__ == '__main__':
     p = CspProblem(variables, dominios, restricciones)
-    resolver('backtrack', iteraciones= None)
+    resolver('backtrack', iteraciones = None)
+    for a in range(1,10):
+        resolver('min_conflicts', iteraciones= 3000*(a+1))
