@@ -9,7 +9,7 @@ dominios = dict((a, ['Lasers', 'Motores', 'Cabinas para tripulantes', 'Bahias de
  #'F' : ['D','H'], 'G' : ['E','I'], 'H' : ['F', 'I'], 'I' : ['J','G','H'], 'J' : ['I', 'K'], 'K' : ['L','J'],
 # 'L' : ['K','M','N','P'], 'M' : ['L'], 'N' : ['L'], 'O' : ['P'], 'P' : ['L','O','Q'], 'Q' : ['P']}
 vecinos = (('A','B','C'), ('B','A','D'), ('C','A','D','E'), ('D','B','C','F'), ('E','C','G'),
- ('F','D','H'), ('G','E','I'), ('H','F','I'), ('I','J','G','H'), ('J','I','K'), ('K','L','J'),
+ ('F','D','H'), ('G','E','I','H'), ('H','F','I','G'), ('I','J','G','H'), ('J','I','K'), ('K','L','J'),
  ('L','K','M','N','P'), ('M','L'), ('N','L'), ('O','P'), ('P','L','O','Q'), ('Q','P'))
 restricciones = []
 
@@ -95,12 +95,47 @@ def grabar(busqueda, valor, iteraciones):
 	archi.write('{}:{}\n'.format(busqueda, valor, iteraciones))
 	archi.close()
 
+def validar(resultado):
+    print resultado
+    for ab in resultado.items():
+        if ab[1] == 'Motores' and ab[0] not in ('O','P','Q','M','N','E','F'): # Los motores solo pueden ubicarse en los slots traseros o en los 4 slots laterales
+            print 'Hay motores en posiciones incorrectas', ab
+        resultad = []
+        for z in nodos_conectados(ab):
+            resultad.append(resultado[z])
+            if ab[1] == 'Baterias' and resultado[z] == 'Lasers': # No puede haber baterías conectadas a lasers
+                print 'Hay Baterias conectadas a Lasers', ab, z
+            if ab[1] == 'Lasers' and resultado[z] == 'Baterias':
+                print 'Hay Lasers conectadas a Baterias', ab, z
+            if ab[1] == 'Cabinas para tripulantes' and resultado[z] == 'Motores':
+                print 'La cabina estan conectada a un motor', ab, z
+            if ab[1] == 'Motores' and resultado[z] == 'Cabinas para tripulantes':
+                print 'La Motores estan conectados a una cabina', ab, z
+            if ab[1] == 'Escudos' and resultado[z] == 'Sistemas de vida extraterrestres':
+                print 'Los escudos estan conectados con los Sistemas de vida extraterrestres', ab, z
+            if ab[1] == 'Sistemas de vida extraterrestres' and resultado[z] == 'Escudos':
+                print 'Los Sistemas de vida extraterrestres estan conectados con escudos', ab, z
+
+        if ab[1] == 'Sistemas de vida extraterrestres' and resultad.count('Cabinas para tripulantes') == 0 :
+            print 'Los Sistemas de vida extraterrestres no tienen conectado ninguna cabina', ab
+        if ab[1] == 'Bahias de carga' and resultad.count('Cabinas para tripulantes') == 0 :
+            print 'Las bahias de carga no estan conectados a una Cabina para tripulantes', ab
+        if ab[1] == 'Baterias' and (resultad.count('Lasers') + resultad.count('Cabinas para tripulantes') + resultad.count('Escudos') + resultad.count('Sistemas de vida extraterrestres')) <= 1:
+            print 'Las baterias tienen conectados menos de 2 sistemas necesarios', ab
+        if ab[1] in resultad:
+            print 'Hay 2 modulos iguales conectados entre si', ab
+
+def nodos_conectados(nodo):
+    for a in vecinos:
+        if a[0] == nodo[0][0]:
+            return a[1:]
+
 if __name__ == '__main__':
     archi=open('entrega_2.txt','w')
     p = CspProblem(variables, dominios, restricciones)
     resolver('backtrack', iteraciones = None)
     for a in range(1,10):
-        resolver('min_conflicts', iteraciones= 500)
+        validar(resolver('min_conflicts', iteraciones= 500))
 
 if __name__ != '__main__':
     archi=open('entrega_2.txt','w')
