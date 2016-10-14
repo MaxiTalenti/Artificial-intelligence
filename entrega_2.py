@@ -81,20 +81,26 @@ def resolver(metodo_busqueda, iteraciones):
     if metodo_busqueda == 'backtrack':
         resultado = backtrack(problem = problem)
         grabar('1', resultado, iteraciones = iteraciones)
+        return resultado
         #def backtrack(problem, variable_heuristic='', value_heuristic='', inference=True):
     if metodo_busqueda == 'min_conflicts':
         resultado = min_conflicts(problem = problem, iterations_limit = iteraciones)
-        print iteraciones, resultado
+        #print iteraciones, resultado
         grabar('2', resultado, iteraciones = iteraciones)
+        return resultado
         #def min_conflicts(problem, initial_assignment=None, iterations_limit=0):
 
 def grabar(busqueda, valor, iteraciones):
 	archi=open('entrega_2.txt','a')
-	archi.write('{}:{} Iteraciones: {}\n'.format(busqueda, valor, iteraciones))
+	archi.write('{}:{}\n'.format(busqueda, valor, iteraciones))
 	archi.close()
 
 if __name__ == '__main__':
+    archi=open('entrega_2.txt','w')
     p = CspProblem(variables, dominios, restricciones)
     resolver('backtrack', iteraciones = None)
-    for a in range(1,5):
-        resolver('min_conflicts', iteraciones= 3000*(a+1))
+    for a in range(1,10):
+        resolver('min_conflicts', iteraciones= 500)
+
+if __name__ != '__main__':
+    archi=open('entrega_2.txt','w')
