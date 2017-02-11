@@ -1,8 +1,11 @@
+# coding=utf-8
+
 # Supongamos que tenemos un tablero rectangular dividido en cuadrados, cuyo tamaño es 3 cuadrados de largo por 4 de ancho.
-#  Inicialmente, todos los cuadrados están pintados de blanco
-# | X |   |   |   |	 
-# |   |   |   |   |	 
-# |   |   |   |   |	 
+# Inicialmente, todos los cuadrados están pintados de blanco
+# 2 | X |   |   |   | 
+# 1 |   |   |   |   | 
+# 0 |   |   |   |   |
+#	  0   1   2   3
  	 	 	 
 # El objetivo es pintar todos los cuadrados de rojo. 
 # Para ello, disponemos de un robot que es capaz de pintar cuadrados individuales de rojo, con las siguientes restricciones:
@@ -12,28 +15,53 @@
 # # y lo pinta de color rojo. 
 # - Inicialmente, el robot se encuentra sobre el cuadrado de la esquina superior izquierda, que ya está pintado de rojo.
 
-# coding=utf-8
 from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, astar
 from simpleai.search.viewers import ConsoleViewer, BaseViewer
-import random
 
-ESTADO = [(0,1), (0,2), (0,3), (1,0), (1,1), (1,2), (1,3), (2,0), (2,1), (2,2), (2,3)]
+ESTADO = (0,2), [(0,0),(0,1),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2),(3,0),(3,1),(3,2)]
 
 class Problema(SearchProblem):
 
-    def is_goal(self, state):
-        return len(state) == 1
+	def is_goal(self, state):
+		posicion, sinpintar = state
+		return len(sinpintar) == 0
 
-    def result(self, state, actions):
+	def actions(self, state):
+		posicion, sinpintar = state
+		x, y = posicion
+		acciones = []
+		if (x+2,y+1) in sinpintar:
+			acciones.append(('Mov1', (x+2,y+1)))
+		if (x+2,y-1) in sinpintar:
+			acciones.append(('Mov2', (x+2,y-1)))
+		if (x-2,y+1) in sinpintar:
+			acciones.append(('Mov3', (x-2,y+1)))
+		if (x-2,y-1) in sinpintar:
+			acciones.append(('Mov4', (x-2,y-1)))
+		if (x+1,y-2) in sinpintar:
+			acciones.append(('Mov5', (x+1, y-2)))
+		if (x+1,y+2) in sinpintar:
+			acciones.append(('Mov6', (x+1, y+2)))
+		if (x-1,y-2) in sinpintar:
+			acciones.append(('Mov7', (x-1,y-2)))
+		if (x-1,y+2) in sinpintar:
+			acciones.append(('Mov8', (x-1,y+2)))
 
-    def actions(self, state):
+		return acciones
 
-    def cost(self, state1, action, state2):
-        return 1
+	def result(self, state, action):
+		posicion, sinpintar = state
+		xnuevo, ynuevo  = action[1]
+		sinpintarnuevos = sinpintar[:]
+		sinpintarnuevos.remove((xnuevo, ynuevo))
+		return ((xnuevo, ynuevo), sinpintarnuevos)
 
-    def heuristic(self, state):
-        return len(state)
+	def cost(self, state1, action, state2):
+		return 1
 
+	def heuristic(self, state):
+		posicion, sinpintar = state
+		return len(sinpintar)
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = Problema(posicion_rey)
@@ -47,7 +75,7 @@ def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
 	elif (metodo_busqueda == 'astar'): # Estrella
 		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	print(visor.stats)
+	print(resultado.state)
 	return resultado
 
-resolver(metodo_busqueda='astar', posicion_rey=ESTADO, controlar_estados_repetidos=True)
+resolver(metodo_busqueda='breadth_first', posicion_rey=ESTADO, controlar_estados_repetidos=True)
