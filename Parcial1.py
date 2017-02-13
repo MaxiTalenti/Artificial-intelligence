@@ -21,7 +21,7 @@ class problem(SearchProblem):
 
     def results(self, state, actions):
         a,b = actions
-        statenuevo = state[:]
+        statenuevo = list(state)
         statenuevo.remove(actions)
         statenuevo.append((a,b,1))
         if (a-1,b,0) in state:
@@ -30,7 +30,7 @@ class problem(SearchProblem):
         if (a,b-1,0) in state:
             statenuevo.remove(a,b-1,0)
             statenuevo.remove(a,b-1,1)
-        return statenuevo
+        return tuple(statenuevo)
 
     def heuristic(self, state):
         return len(state)/5
@@ -53,4 +53,4 @@ def resolver(metodo_busqueda,initial,controlar_estados_repetidos):
 	print(visor.stats)
 	return resultado
 
-resolver('breadth_first', [(0,0,0),(0,1,0),(0,2,0),(1,0,0),(1,1,0),(1,2,0),(2,0,0),(2,1,0),(2,2,0)], True)
+resolver('breadth_first', ((0,0,0),(0,1,0),(0,2,0),(1,0,0),(1,1,0),(1,2,0),(2,0,0),(2,1,0),(2,2,0)), True)

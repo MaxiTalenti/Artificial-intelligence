@@ -18,7 +18,7 @@
 from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, astar
 from simpleai.search.viewers import ConsoleViewer, BaseViewer
 
-ESTADO = (0,2), [(0,0),(0,1),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2),(3,0),(3,1),(3,2)]
+ESTADO = (0,2), ((0,0),(0,1),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2),(3,0),(3,1),(3,2))
 
 class Problema(SearchProblem):
 
@@ -51,10 +51,12 @@ class Problema(SearchProblem):
 
 	def result(self, state, action):
 		posicion, sinpintar = state
+		sin_pintar = list(sinpintar)
+		# modificas sin_pintar, ya que ahora es una lista
+		sin_pintar.remove((action[1]))
+		nuevo_state = posicion, tuple(sin_pintar)
 		xnuevo, ynuevo  = action[1]
-		sinpintarnuevos = sinpintar[:]
-		sinpintarnuevos.remove((xnuevo, ynuevo))
-		return ((xnuevo, ynuevo), sinpintarnuevos)
+		return ((xnuevo, ynuevo), tuple(sin_pintar))
 
 	def cost(self, state1, action, state2):
 		return 1
@@ -76,6 +78,8 @@ def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	elif (metodo_busqueda == 'astar'): # Estrella
 		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
 	print(resultado.state)
+	for a in resultado.path():
+		print 'parte', a
 	return resultado
 
 resolver(metodo_busqueda='breadth_first', posicion_rey=ESTADO, controlar_estados_repetidos=True)
