@@ -19,20 +19,24 @@ from simpleai.search.viewers import ConsoleViewer, BaseViewer
 #     0    1    2    3    4    5
 
 FINAL = (5,3) # Casilla por la cual debe salir
-# Robot, paredes, comidas, espacios libres
-ESTADO = ((5,2), ((0,2), (1,1), (1,4), (2,3), (3,0), (3,1), (3,4), (3,5), (4,3), (5,1), (5,5)),
-         ((0,1), (2,4), (4,2)), ((0,0), (0,3), (0,4), (0,5), (1,0), (1,2), (1,3), (1,5), (2,0), (2,1), (2,2), (2,5), (3,2), (3,3),
-         (4,0), (4,1), (4,4), (4,5), (5,0), (5,3), (5,4)))
+
+ESTADO = ((5,2), # Robot
+         ((0,2), (1,1), (1,4), (2,3), (3,0), (3,1), (3,4), (3,5), (4,3), (5,1), (5,5)), # Paredes
+         ((0,1), (2,4), (4,2)), # Comidas
+         ((0,0), (0,3), (0,4), (0,5), (1,0), (1,2), (1,3), (1,5), (2,0), (2,1), (2,2), (2,5), (3,2), (3,3),
+         (4,0), (4,1), (4,4), (4,5), (5,0), (5,3), (5,4))) # Espacios libres
 
 class Problema(SearchProblem):
 
     def is_goal(self, state):
-        return (state[0] == FINAL and len(state[2]) == 0)
+        robot, paredes, comidas, esplibres = state
+        if len(comidas) == 0:
+            print 'comidas vacias', robot, comidas
+        return (robot == FINAL and len(comidas) == 0)
 
     def actions(self, state):
-        x, y = state[0]
-        esplibres = state[3]
-        comidas = state[2]
+        robot, paredes, comidas, esplibres = state
+        x, y = robot
         acciones = []
         if ((x+1,y) in esplibres) or ((x+1,y) in comidas):
             acciones.append(('Derecha', (x+1,y)))
@@ -50,12 +54,15 @@ class Problema(SearchProblem):
         x, y = robot
         com = list(comidas)
         espl = list(espacioslibres)
-        if action[1] in comidas:
-            com.remove((action[1]))
+        if (x,y) in comidas:
+            # Comio
+            com.remove((x,y))
         else:
-            espl.remove((action[1]))
-        espl.append((robot))
-        return (action[1], paredes, tuple(com), tuple(espl))
+            # Movio
+            espl.remove((x,y))
+        espl.append((x,y))
+
+        return ((x,y), paredes, tuple(com), tuple(espl))
 
     def cost(self, state1, action, state2):
         return 1
@@ -63,7 +70,6 @@ class Problema(SearchProblem):
     def heuristic(self, state):
         robot, paredes, comidas, espacioslibres = state
         return len(comidas) +1
-
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = Problema(posicion_rey)
@@ -79,7 +85,7 @@ def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
 	print(resultado.state)
 	for a in resultado.path():
-		print 'parte', a
+		print 'Step', a
 	return resultado
 
-resolver(metodo_busqueda='breadth_first', posicion_rey=ESTADO, controlar_estados_repetidos=True)
+resolver(metodo_busqueda='astar', posicion_rey=ESTADO, controlar_estados_repetidos=True)
