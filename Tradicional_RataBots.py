@@ -60,7 +60,7 @@ class Problema(SearchProblem):
         else:
             # Movio
             espl.remove((x,y))
-        espl.append((x,y))
+        espl.append((robot))
 
         return ((x,y), paredes, tuple(com), tuple(espl))
 
@@ -73,7 +73,7 @@ class Problema(SearchProblem):
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = Problema(posicion_rey)
-	visor = ConsoleViewer()
+	visor = BaseViewer()
 	#Busquedas, Grafo -> graph_search=True
 	if (metodo_busqueda == 'breadth_first'): # En amplitud
 		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)

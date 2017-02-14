@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Se necesita programar la lógica para un autoelevador (“zamping”) robótico, 
 # cuya tarea consiste en recolectar y llevar hacia un punto de entrega único, 
 # una determinada cantidad de pallets que le son pedidos.
@@ -22,3 +24,40 @@
 # 1 | 3 |    |   |  |   |
 # 0 | 6 | 7  |   |  |   |
 #     0    1   2   3  4
+
+from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, astar
+from simpleai.search.viewers import ConsoleViewer, BaseViewer
+
+ESTADO = 
+
+class Problema(SearchProblem):
+
+	def is_goal(self, state):
+
+	def actions(self, state):
+
+	def result(self, state, action):
+
+	def cost(self, state1, action, state2):
+
+	def heuristic(self, state):
+
+
+def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
+	problema = Problema(posicion_rey)
+	visor = BaseViewer()
+	#Busquedas, Grafo -> graph_search=True
+	if (metodo_busqueda == 'breadth_first'): # En amplitud
+		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'depth_first'): # Profundidad
+		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'greedy'): # Avara
+		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	elif (metodo_busqueda == 'astar'): # Estrella
+		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
+	print(resultado.state)
+	for a in resultado.path():
+		print 'parte', a
+	return resultado
+
+resolver(metodo_busqueda='breadth_first', posicion_rey=ESTADO, controlar_estados_repetidos=True)
