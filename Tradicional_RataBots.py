@@ -69,7 +69,11 @@ class Problema(SearchProblem):
 
     def heuristic(self, state):
         robot, paredes, comidas, espacioslibres = state
-        return len(comidas) +1
+        x, y = robot
+        a, b = FINAL
+        z = max([abs(x-a), abs(y-b)])
+
+        return len(comidas) + z
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = Problema(posicion_rey)
