@@ -16,9 +16,9 @@
 ## Teniendo en cuenta el diagrama de almacén, y como orden “entregar los pallets 8, 3 y 9”, 
 ## resuelva mediante búsqueda A* considerando la heurística planteada en b (solo las primeras 5 iteraciones).
 
-# |   | 1  | 5 |  | 9 |
-# | 2 | 10 |   |  | R |
-# | 4 |    | 8 |  | E |
-# | 3 |    |   |  |   |
-# | 6 | 7  |   |  |   |
-
+# 4 |   | 1  | 5 |  | 9 |
+# 3 | 2 | 10 |   |  | R |
+# 2 | 4 |    | 8 |  | E |
+# 1 | 3 |    |   |  |   |
+# 0 | 6 | 7  |   |  |   |
+#     0    1   2   3  4

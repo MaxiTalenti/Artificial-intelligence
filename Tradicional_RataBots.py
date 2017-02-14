@@ -51,7 +51,8 @@ class Problema(SearchProblem):
 
     def result(self, state, action):
         robot, paredes, comidas, espacioslibres = state
-        x, y = robot
+        print 'action', action[1]
+        x, y = action[1]
         com = list(comidas)
         espl = list(espacioslibres)
         if (x,y) in comidas:
@@ -73,7 +74,7 @@ class Problema(SearchProblem):
 
 def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
 	problema = Problema(posicion_rey)
-	visor = BaseViewer()
+	visor = ConsoleViewer()
 	#Busquedas, Grafo -> graph_search=True
 	if (metodo_busqueda == 'breadth_first'): # En amplitud
 		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
