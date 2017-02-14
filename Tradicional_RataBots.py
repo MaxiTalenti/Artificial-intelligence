@@ -51,7 +51,6 @@ class Problema(SearchProblem):
 
     def result(self, state, action):
         robot, paredes, comidas, espacioslibres = state
-        print 'action', action[1]
         x, y = action[1]
         com = list(comidas)
         espl = list(espacioslibres)
