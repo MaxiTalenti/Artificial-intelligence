@@ -133,9 +133,9 @@ def nodos_conectados(nodo):
 if __name__ == '__main__':
     archi=open('entrega_2.txt','w')
     p = CspProblem(variables, dominios, restricciones)
-    resolver('backtrack', iteraciones = None)
-    for a in range(1,10):
-        validar(resolver('min_conflicts', iteraciones= 500))
+    validar(resolver('backtrack', iteraciones = None))
+  #  for a in range(1,10):
+ #       validar(resolver('min_conflicts', iteraciones= 500))
 
 if __name__ != '__main__':
     archi=open('entrega_2.txt','w')
