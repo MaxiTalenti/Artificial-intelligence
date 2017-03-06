@@ -36,14 +36,14 @@ def procesadores(var, val):
 	T = 0
 	G = 0
 	B = 0
-	print var, val
-	for a in val:
+	print 'Variables', var, 'Valores', val
+	for index, a in enumerate(val):
 		if a == 'T':
-			T = T + tareas_procesadores[var[val.index(a)]]
+			T = T + tareas_procesadores[var[index]]
 		if a == 'G':
-			G = G + tareas_procesadores[var[val.index(a)]]
+			G = G + tareas_procesadores[var[index]]
 		if a == 'B':
-			B = B + tareas_procesadores[var[val.index(a)]]
+			B = B + tareas_procesadores[var[index]]
 	print 'PROCESADORES', 'T', T, 'G', G, 'B', B
 	if T > serv_procesadores['T']:
 		return False
@@ -57,13 +57,13 @@ def ram(var, val):
 	T = 0
 	G = 0
 	B = 0
-	for a in val:
+	for index, a in enumerate(val):
 		if a == 'T':
-			T = T + tareas_ram[var[val.index(a)]]
+			T = T + tareas_ram[var[index]]
 		if a == 'G':
-			G = G + tareas_ram[var[val.index(a)]]
+			G = G + tareas_ram[var[index]]
 		if a == 'B':
-			B = B + tareas_ram[var[val.index(a)]]
+			B = B + tareas_ram[var[index]]
 	print 'RAM', 'T', T, 'G', G, 'B', B
 	if T > serv_ram['T']:
 		return False
@@ -77,13 +77,13 @@ def aceleradora(var, val):
 	T = 0
 	G = 0
 	B = 0
-	for a in val:
+	for index, a in enumerate(val):
 		if a == 'T':
-			T = T + tareas_aceleradora[var[val.index(a)]]
+			T = T + tareas_aceleradora[var[index]]
 		if a == 'G':
-			G = G + tareas_aceleradora[var[val.index(a)]]
+			G = G + tareas_aceleradora[var[index]]
 		if a == 'B':
-			B = B + tareas_aceleradora[var[val.index(a)]]
+			B = B + tareas_aceleradora[var[index]]
 	print 'AG', 'T', T, 'G', G, 'B', B
 	if T > serv_aceleradora['T']:
 		return False
@@ -99,18 +99,20 @@ def todos(var, val):
 restricciones.append(((variables), procesadores))
 restricciones.append(((variables), ram))
 restricciones.append(((variables), aceleradora))
+# Para que use todos los servidores, no hace falta.
 #restricciones.append(((variables), todos))
 
+print '--- COMIENZO ---'
 problem = CspProblem(variables, dominios, restricciones)
 resultado = backtrack(problem = problem)
 print resultado
 
-# {'A': 'G', 'C': 'T', 'E': 'T', 'G': 'G', 'L': 'T', 'S': 'G'}
-# {'A': 'T', 'C': 'T', 'E': 'T', 'G': 'G', 'L': 'T', 'S': 'G'}
+# --> Solución <--
+# {'A': 'T', 'C': 'T', 'E': 'G', 'G': 'G', 'L': 'T', 'S': 'B'}
 
-# G -> G, S       --- > 4 proc, 16 RAM, ag --- > 2 + 2 , 2 + 8
-# T -> A, C, E, L --- > 8 proc, 32 RAM     --- > 1 + 20 + 14 + 10
-# B -> None    --- > 4 proc, 15 RAM
+# G -> E, G    --- > 4 proc, 16 RAM, ag --- > 2 + 2, 14 + 2, 1
+# T -> L, C, A --- > 8 proc, 32 RAM     --- > 2 + 5 + 1, 10 + 20 + 1
+# B -> S    --- > 4 proc, 15 RAM        --- > 2, 8
 
 # L: requiere 2 procesadores y 10 GB de RAM.
 # C: requiere 5 procesadores y 20 GB de RAM.
