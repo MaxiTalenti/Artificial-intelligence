@@ -38,7 +38,7 @@ def espadastempladasterminadas(var, val):
 	return not 'ETP' in val and 'EF' in val
 
 def todos(var, val):
-	return len(set(val)) == 5
+	return len(set(val)) == 3
 
 #for a in itertools.combinations(variables, 2):
 	#restricciones.append((a, lingotesa))
@@ -62,7 +62,7 @@ for a in variables: # Obtiene adyacentes y casilla a la cuales son adyacentes
 	restricciones.append(((tuple(casillas)), espadastempladasenproceso))
 	restricciones.append(((tuple(casillas)), espadastempladasterminadas))
 
-#restricciones.append(((variables), todos))
+restricciones.append(((variables), todos))
 
 problem = CspProblem(variables, dominios, restricciones)
 resultado = backtrack(problem = problem)
