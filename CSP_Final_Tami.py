@@ -20,27 +20,27 @@ from simpleai.search import CspProblem, backtrack, min_conflicts
 
 restricciones = []
 
-variables = tuple((a,b) for a in range(6) for b in range(6)) # Arranca de la izq inferior contando por casillero.
+variables = tuple((a,b) for a in range(4) for b in range(4)) # Arranca de la izq inferior contando por casillero.
 dominios = dict((a, ['LH', 'LA', 'EF', 'ETP', 'ETT']) for a in variables) 
 
-def lingotesa(var, val): # No pueden ubicarse adyacentes a los lingotes de hierro, por el peligro de oxidación. RESTRICCIÓN BINARIA.
-	return not 'LH' in val and 'LA' in val
+def lingotesa(var, val): # No pueden ubicarse adyacentes a los lingotes de hierro, por el peligro de oxidación.
+	return not ('LH' in val and 'LA' in val)
 
 def espadasforjadas(var, val): # Deben encontrarse adyacentes entre si, para minimizar la necesidad de soportes especiales para las espadas.
-	if val.count('EF') != 0:
+	if val.count('EF') > 0:
 		return val.count('EF') != 1
 	return True
 
-def espadastempladasenproceso(var, val): # Espadas templadas en proceso de enfriamento: no deben colocarse adyacentes entre si. RESTRICCIÓN BINARIA.
-	return val.count('ETP') != 2
+def espadastempladasenproceso(var, val): # Espadas templadas en proceso de enfriamento: no deben colocarse adyacentes entre si.
+	return val.count('ETP') <= 1
 
-def espadastempladasterminadas(var, val):
-	return not 'ETP' in val and 'EF' in val
+def espadastempladasterminadas(var, val): # No pueden estar adyacentes a las espadas en enfriamiento (en proceso)
+	return not ('ETP' in val and 'ETT' in val)
 
 def todos(var, val):
 	return len(set(val)) == 3
 
-#for a in itertools.combinations(variables, 2):
+#for a in itertools.combinations(variables, 2): # Para restricciones binarias.
 	#restricciones.append((a, lingotesa))
 	#restricciones.append((a, espadastempladasenproceso))
 
@@ -67,11 +67,6 @@ restricciones.append(((variables), todos))
 problem = CspProblem(variables, dominios, restricciones)
 resultado = backtrack(problem = problem)
 print resultado
-
-#  --- > Solución < ---
-# 4 | - | - | - | - | - |
-# 3 | - | - | - | - | - |
-# 2 | - | - | - | - | - |
-# 1 | - | - | - | - | - |
-# 0 | - | - | - | - | - |
-#     0   1   2   3   4
+print ''
+for a in range(4):
+	print '{:<2} | {:<3} | {:<3} | {:<3} | {:<3} |'.format(a, resultado[a, 0], resultado[a, 1], resultado[a, 2], resultado[a, 3])
