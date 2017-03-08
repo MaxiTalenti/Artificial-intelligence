@@ -12,7 +12,6 @@ from simpleai.search import CspProblem, backtrack, min_conflicts
 # 0 | - | - | A | - | - | 
 #     0   1   2   3   4
 
-# --> Parte CSP <-- 
 # Luego del último ataque, se decidió incrementar el número de robots a 6, y ya no permanecerán almacenados,
 # sino que se ubicarán en posiciones defensivas fijas y permanentes. Pero deben respetarse algunas restricciones:
 

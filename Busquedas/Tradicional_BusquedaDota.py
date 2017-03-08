@@ -44,14 +44,14 @@ class Problema(SearchProblem):
             acciones.append(('MoverLibre3', (x,y-1)))
         if (x,y+1) in libres:
             acciones.append(('MoverLibre2', (x,y+1)))
-        if (x+1,y+1) in ocupados:
-            acciones.append(('Matar1', (x+1,y+1)))
-        if (x-1,y-1) in ocupados:
-            acciones.append(('Matar2', (x-1,y-1)))
-        if (x+1,y-1) in ocupados:
-            acciones.append(('Matar3', (x+1,y-1)))
-        if (x-1,y+1) in ocupados:
-            acciones.append(('Matar4', (x-1,y+1)))
+        if (x+1,y) in ocupados:
+            acciones.append(('Matar1', (x+1,y)))
+        if (x-1,y) in ocupados:
+            acciones.append(('Matar2', (x-1,y)))
+        if (x,y-1) in ocupados:
+            acciones.append(('Matar3', (x,y-1)))
+        if (x,y+1) in ocupados:
+            acciones.append(('Matar4', (x,y+1)))
 
         return acciones
 
@@ -80,21 +80,9 @@ class Problema(SearchProblem):
         return len(ocupados)
                 
 
-def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
-    problema = Problema(posicion_rey)
-    visor = BaseViewer()
-    #Busquedas, Grafo -> graph_search=True
-    if (metodo_busqueda == 'breadth_first'): # En amplitud
-        resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'depth_first'): # Profundidad
-        resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'greedy'): # Avara
-        resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'astar'): # Estrella
-        resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    print resultado.state
-    for a in resultado.path():
-        print 'parte', a
-    return resultado
+problema = Problema(ESTADO)
+visor = BaseViewer()
+respuesta = astar(problema, graph_search=True, viewer=visor)
+for a in respuesta.path():
+    print a
 
-resolver(metodo_busqueda='astar', posicion_rey=ESTADO, controlar_estados_repetidos=True)

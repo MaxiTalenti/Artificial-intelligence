@@ -41,28 +41,45 @@ movs = {1: [(2, 25), (3, 10), (4, 20), (20, 30)],
 INITIAL = 15
 GOAL = 9
 
-class HnefataflProblema(SearchProblem):
+class Problema(SearchProblem):
 
-	def is_goal(self, state):
+    def is_goal(self, state):
 		return state == GOAL
 
-	def actions(self, state):
-		return movs[state]
+    def actions(self, state):
+        print '--- ', state
+        return movs[state]
 
-	def result(self, state, actions):
-		return actions[0]
+    def result(self, state, actions):
+        return actions[0]
 
-	def cost(self, state1, action, state2):
-		return action[1]
+    def cost(self, state1, action, state2):
+        print 'costo', action[1], 'action ->', state2
+        return action[1]
 
-	def heuristic(self, state):
-		xcompu, ycompu = mapa[state]
-		xfinal, yfinal = mapa[GOAL]
-		return sum([abs(xcompu-xfinal), abs(ycompu-yfinal)])
+    def heuristic(self, state):
+        # Resolución mia.
+		#xcompu, ycompu = mapa[state]
+		#xfinal, yfinal = mapa[GOAL]
+		#return sum([abs(xcompu-xfinal), abs(ycompu-yfinal)])
 
-problema = HnefataflProblema(INITIAL)
+        # Franco Erni.
+        distance = 0
+        x_sate, y_sate = mapa[state]
+        x_goal, y_goal = mapa[GOAL]
+        distance += abs(x_sate-x_goal) +  abs(y_sate-y_goal)
+        print 'heuristica', distance, '-> estado', state
+        return distance
+
+problema = Problema(INITIAL)
 visor = BaseViewer()
 resultado = astar(problema, graph_search=True, viewer=visor)
 for a in resultado.path():
 	print a
 print resultado
+
+# Tipos de búsqueda: 
+# 'breadth_first' -> En amplitud      
+# 'depth_first'   -> Profundidad
+# 'greedy'        -> Avara      - > Heuristica
+# 'astar'         -> Estrella   - > Heurística + costo

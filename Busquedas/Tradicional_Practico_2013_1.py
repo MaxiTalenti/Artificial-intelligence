@@ -10,7 +10,7 @@ import random
 
 INITIAL = ('T','C','L'), ('Mercado')
 
-class HnefataflProblema(SearchProblem):
+class Problema(SearchProblem):
 
 	def is_goal(self, state):
 		return len(state[0]) == 0
@@ -46,7 +46,7 @@ class HnefataflProblema(SearchProblem):
 		return len(state[0]) + 1
 
 
-problema = HnefataflProblema(INITIAL)
+problema = Problema(INITIAL)
 visor = BaseViewer()
 resultado = astar(problema, graph_search=True, viewer=visor)
 for a in resultado.path():

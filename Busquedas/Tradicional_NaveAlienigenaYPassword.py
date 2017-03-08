@@ -13,7 +13,7 @@ import random
 
 INITIAL = (0,0,0)
 
-class HnefataflProblema(SearchProblem):
+class Problema(SearchProblem):
 
 	def is_goal(self, state):
 		return state == (5,1,8)
@@ -44,20 +44,8 @@ class HnefataflProblema(SearchProblem):
 			contador = contador + 1
 		return contador
 
-def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
-	problema = HnefataflProblema(posicion_rey)
-	visor = BaseViewer()
-	#Busquedas, Grafo -> graph_search=True
-	if (metodo_busqueda == 'breadth_first'): # En amplitud
-		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'depth_first'): # Profundidad
-		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	for a in resultado.path():
-		print a
-	return resultado
-
-resolver('astar', INITIAL, True)
+problema = Problema(INITIAL)
+visor = BaseViewer()
+respuesta = astar(problema, graph_search=True, viewer=visor)
+for a in respuesta.path():
+	print a

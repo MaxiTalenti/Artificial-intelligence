@@ -18,7 +18,7 @@ def modulos_diferentes(var, val): # No es posible instalar dos módulos iguales 
 
 def ubicacion_motores(var, val): # Los motores solo pueden ubicarse en los slots traseros o en los 4 slots laterales.
     if ('Motores') in val:
-        return var[val.index('Motores')] in ('O','P','Q','M','N','E','F')
+        return var[0] in ('O','P','Q','M','N','E','F')
     return True
 
 def cabinas_motores(var, val): # Las cabinas no pueden estar conectadas a los motores
@@ -36,8 +36,6 @@ def baterias_lasers(var, val): # No puede haber baterías conectadas a lasers.
     return True
 
 def sist_cabinas(var, val): # Los sistemas de vida extraterrestre sí o sí tienen que ubicarse conectados a cabinas.
-    if (('Cabinas para tripulantes') in val[0]):
-        return ('Sistemas de vida extraterrestres') in val
     if (('Sistemas de vida extraterrestres') in val[0]):
         return ('Cabinas para tripulantes') in val
     return True
@@ -52,8 +50,6 @@ def sist_escudos(var, val): # Los escudos y los sistemas de vida extraterrestre 
 def bahias_cabinas(var, val): # Las bahías de carga tienen que tener al menos una cabina conectada.
     if ('Bahias de carga') in val[0]:
         return ('Cabinas para tripulantes') in val
-    if ('Cabinas para tripulantes') in val[0]:
-        return ('Bahias de carga') in val
     return True
 
 def baterias(var, val): # Las baterías tienen que tener al menos dos sistemas conectados: Lasers, Cabinas de tripulantes, Escudos y Sistemas de vida extraterrestre.
@@ -64,9 +60,12 @@ def baterias(var, val): # Las baterías tienen que tener al menos dos sistemas c
 def usar_todos(var, val): # Usar todos los modulos
     return len(set(val)) == 7
 
+for a in variables: # Por pedido de Fisa hago esta restricción unaria.
+    restricciones.append((a, ubicacion_motores))
+
 for a in vecinos:
     restricciones.append((a, modulos_diferentes))
-    restricciones.append((a, ubicacion_motores))
+    #restricciones.append((a, ubicacion_motores))
     restricciones.append((a, cabinas_motores))
     restricciones.append((a, baterias_lasers))
     restricciones.append((a, sist_cabinas))
@@ -124,6 +123,7 @@ def validar(resultado):
             print 'Las baterias tienen conectados menos de 2 sistemas necesarios', ab
         if ab[1] in resultad:
             print 'Hay 2 modulos iguales conectados entre si', ab
+    print 'Validaciones terminadas.'
 
 def nodos_conectados(nodo):
     for a in vecinos:

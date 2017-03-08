@@ -43,7 +43,16 @@ restricciones.append(((variables), otroscalculos))
 problem = CspProblem(variables, dominios, restricciones)
 resultado = backtrack(problem = problem)
 print resultado
-
+for a in resultado: # Para que se vea más entendible.
+	if resultado[a] == 'S':
+		resultado[a] = '-'
+print ''
+for a in range(7):
+	print '{:<2} | {:<2}| {:<2}| {:<2}| {:<2}| {:<2}| {:<2}| {:<2}|'.format(a, resultado[a, 0], resultado[a, 1], resultado[a, 2],
+		resultado[a, 3], resultado[a, 4], resultado[a, 5], resultado[a, 6])
+print ''
+print 'Reyes', resultado.values().count('R')
+print 'Soldados', resultado.values().count('-')
 # --- > Solución encontrada < ---
 
 # {(1, 3): 'S', (6, 6): 'S', (3, 0): 'S', (3, 2): 'S', (2, 1): 'R', (0, 0): 'R', (1, 6): 'R', (5, 1): 'S', (2, 5): 'S', (0, 3): 'R',

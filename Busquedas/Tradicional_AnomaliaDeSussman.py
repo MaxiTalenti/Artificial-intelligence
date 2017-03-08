@@ -87,20 +87,9 @@ class HnefataflProblema(SearchProblem):
 				cantidad = cantidad + 1
 		return cantidad
 
-def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
-	problema = HnefataflProblema(posicion_rey)
-	visor = BaseViewer()
-	#Busquedas, Grafo -> graph_search=True
-	if (metodo_busqueda == 'breadth_first'): # En amplitud
-		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'depth_first'): # Profundidad
-		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	for a in resultado.path():
-		print a
-	return resultado
+problema = HnefataflProblema(INITIAL)
+visor = BaseViewer()
+respuesta = astar(problema, graph_search=True, viewer=visor)
+for a in respuesta.path():
+	print a
 
-resolver('astar', INITIAL, True)

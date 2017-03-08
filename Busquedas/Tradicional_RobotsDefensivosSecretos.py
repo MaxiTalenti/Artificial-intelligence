@@ -23,7 +23,7 @@ INITIAL = ((1,3), (1,3))
 HABITACIONES = ((0,0), (0,1), (0,2), (0,3), (1,0), (1,2), (1,3), (2,0), (2,1), (2,2), (3,0), (3,1), (3,3), (4,0), (4,1), (4,2), (4,3))
 POS_DEFENSIVAS = ((2,0), (4,3))
 
-class HnefataflProblema(SearchProblem):
+class Problema(SearchProblem):
 
 	def is_goal(self, state):
 		rob_1, rob_2 = state
@@ -88,20 +88,8 @@ class HnefataflProblema(SearchProblem):
 		return min([abs(x_1 - x_p1), abs(x_1 - x_p2), abs(y_1 - y_p1), abs(y_1 - y_p2)]) + min([abs(x_2 - x_p1), abs(x_2 - x_p2), abs(y_2 - y_p1), abs(y_2 - y_p2)])
 		
 
-def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
-	problema = HnefataflProblema(posicion_rey)
-	visor = BaseViewer()
-	#Busquedas, Grafo -> graph_search=True
-	if (metodo_busqueda == 'breadth_first'): # En amplitud
-		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'depth_first'): # Profundidad
-		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	for a in resultado.path():
-		print a
-	return resultado
-
-resolver('astar', INITIAL, True)
+problema = Problema(INITIAL)
+visor = BaseViewer()
+respuesta = astar(problema, graph_search=True, viewer=visor)
+for a in respuesta.path():
+	print a

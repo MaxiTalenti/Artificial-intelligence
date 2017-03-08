@@ -3,8 +3,6 @@ import random
 import itertools
 from simpleai.search import CspProblem, backtrack, min_conflicts
 
-# ¡¡¡ NO TERMINADO !!!
-
 # Se desea realizar un programa que pueda organizar un conjunto de tareas de procesamiento en un conjunto de servidores de alto rendimiento,
 # de forma de poder ejecutar todas las tareas en paralelo, aprovechando así el poder de cómputo global.
 # Las tareas no pueden encolarse una detrás de otra, sí o sí deben ejecutarse en paralelo y sin compartir recursos,
@@ -36,7 +34,6 @@ def procesadores(var, val):
 	T = 0
 	G = 0
 	B = 0
-	print 'Variables', var, 'Valores', val
 	for index, a in enumerate(val):
 		if a == 'T':
 			T = T + tareas_procesadores[var[index]]
@@ -44,14 +41,7 @@ def procesadores(var, val):
 			G = G + tareas_procesadores[var[index]]
 		if a == 'B':
 			B = B + tareas_procesadores[var[index]]
-	print 'PROCESADORES', 'T', T, 'G', G, 'B', B
-	if T > serv_procesadores['T']:
-		return False
-	if G > serv_procesadores['G']:
-		return False
-	if B > serv_procesadores['B']:
-		return False
-	return True
+	return T <= serv_procesadores['T'] and G <= serv_procesadores['G'] and B <= serv_procesadores['B']
 
 def ram(var, val):
 	T = 0
@@ -64,14 +54,7 @@ def ram(var, val):
 			G = G + tareas_ram[var[index]]
 		if a == 'B':
 			B = B + tareas_ram[var[index]]
-	print 'RAM', 'T', T, 'G', G, 'B', B
-	if T > serv_ram['T']:
-		return False
-	if G > serv_ram['G']:
-		return False
-	if B > serv_ram['B']:
-		return False
-	return True	
+	return T <= serv_ram['T'] and G <= serv_ram['G'] and B <= serv_ram['B']
 
 def aceleradora(var, val):
 	T = 0
@@ -84,14 +67,7 @@ def aceleradora(var, val):
 			G = G + tareas_aceleradora[var[index]]
 		if a == 'B':
 			B = B + tareas_aceleradora[var[index]]
-	print 'AG', 'T', T, 'G', G, 'B', B
-	if T > serv_aceleradora['T']:
-		return False
-	if G > serv_aceleradora['G']:
-		return False
-	if B > serv_aceleradora['B']:
-		return False
-	return True
+	return T <= serv_aceleradora['T'] and G <= serv_aceleradora['G'] and B <= serv_aceleradora['B']
 
 def todos(var, val):
 	return len(set(val)) == 3
@@ -102,7 +78,6 @@ restricciones.append(((variables), aceleradora))
 # Para que use todos los servidores, no hace falta.
 #restricciones.append(((variables), todos))
 
-print '--- COMIENZO ---'
 problem = CspProblem(variables, dominios, restricciones)
 resultado = backtrack(problem = problem)
 print resultado
