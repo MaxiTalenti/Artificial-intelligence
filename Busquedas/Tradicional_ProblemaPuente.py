@@ -13,7 +13,7 @@ from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, a
 from simpleai.search.viewers import ConsoleViewer, BaseViewer
 
 VALORES = {1: 10, 2: 30, 3: 60, 4: 80, 5: 120}
-ESTADO = ('A', #Linterna
+ESTADO = (('A', 300), #Linterna, segundos de bateria
 		  (1,2,3,4,5), # Personas en A
 		  ()) # Personas en B
 
@@ -26,35 +26,37 @@ class Problema(SearchProblem):
     def actions(self, state):
     	linterna, a, b = state
     	acciones = []
-    	if linterna == 'A':
+    	if linterna[0] == 'A':
     		for x in a:
     			for y in a:
-    				if x != y:
+    				if x != y and linterna[1] >= max([VALORES[x], VALORES[y]]):
     					acciones.append(('Mover', (x,y)))
     	else:
-    		for x in b:
-    			acciones.append(('Volver', x))
-
+            for x in b:
+                if linterna[1] >= VALORES[x]:
+                    acciones.append(('Volver', x))
     	return acciones
 
     def result(self, state, action):
     	linterna, a, b = state
+        lugar, duracion = linterna
     	mov, z = action
     	alist = list(a)
     	blist = list(b)
     	if mov == 'Mover':
-    		x, y = z
-    		alist.remove((x))
-    		alist.remove((y))
-    		blist.append((x))
-    		blist.append((y))
-    		linterna = 'B'
+            x, y = z
+            alist.remove((x))
+            alist.remove((y))
+            blist.append((x))
+            blist.append((y))
+            lugar = 'B'
+            duracion -= max([VALORES[x],VALORES[y]])
     	else:
-    		alist.append((z))
-    		blist.remove((z))
-    		linterna = 'A'
-
-    	return linterna, tuple(alist), tuple(blist)
+            alist.append((z))
+            blist.remove((z))
+            lugar = 'A'
+            duracion -= VALORES[z]
+    	return (lugar, duracion), tuple(alist), tuple(blist)
 
 	def cost(self, state1, action, state2):
 		mov, a = action
@@ -67,7 +69,7 @@ class Problema(SearchProblem):
     def heuristic(self, state):
     	linterna, a, b = state
     	sincruzar = len(a)
-    	if linterna == 'A':
+    	if linterna[0] == 'A':
     		return sincruzar + (sincruzar -1)
     	else:
     		if sincruzar == 0:
@@ -80,3 +82,4 @@ visor = BaseViewer()
 respuesta = astar(problema, graph_search=True, viewer=visor)
 for a in respuesta.path():
     print a
+print 'respuesta final', respuesta
