@@ -13,5 +13,6 @@
 ## Ejercicios práctica 2013
 ### <a href="https://bitbucket.org/ucsedaria/ia-catedra/wiki/2013/Entregas2013/Entrega1">Práctica 1</a>
 * Tradicional_Practico_2013_1
+
 ### <a href="https://bitbucket.org/ucsedaria/ia-catedra/wiki/2013/Entregas2013/Entrega2">Práctica 1</a>
 * Tradicional_Practico_2013_2
