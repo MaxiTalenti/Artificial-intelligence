@@ -49,21 +49,10 @@ class Problema(SearchProblem):
         xx, yy = FINAL
         return min([abs(x-xx), abs(y-yy)])
 
-def resolver(metodo_busqueda,posicion_rey,controlar_estados_repetidos):
-	problema = Problema(posicion_rey)
-	visor = BaseViewer()
-	#Busquedas, Grafo -> graph_search=True
-	if (metodo_busqueda == 'breadth_first'): # En amplitud
-		resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'depth_first'): # Profundidad
-		resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-	print(resultado.state)
-	for a in resultado.path():
-		print 'Step', a
-	return resultado
 
-resolver(metodo_busqueda='astar', posicion_rey=ESTADO, controlar_estados_repetidos=True)
+problema = Problema(ESTADO)
+visor = BaseViewer()
+resultado = astar(problema, graph_search=True, viewer=visor)
+for a in resultado.path():
+	print 'Step', a
+print resultado

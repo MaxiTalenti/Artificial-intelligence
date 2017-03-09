@@ -9,6 +9,7 @@ variables = (1,2,3,4,5,6,7,8)
 dominios = dict((a, ['S','I','M','R','G','D','C','E']) for a in variables)
 otro = ((1,),(1,2),(1,2,3),(1,2,3,4),(1,2,3,4,5),(1,2,3,4,5,6),(1,2,3,4,5,6,7),(1,2,3,4,5,6,7,8))
 
+# Se desea ordenar los procesos de acuerdo a su ejecución, estos no pueden estar ordenados en cualquier orden, sino:
 # S en cualquier momento
 # I debe ejecutarse luego de al menos otros 3 procesos. - OK
 # M primero - OK

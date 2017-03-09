@@ -3,6 +3,9 @@ from simpleai.search import SearchProblem, breadth_first, depth_first, greedy, a
 from simpleai.search.viewers import ConsoleViewer, BaseViewer, WebViewer
 import random
 
+# Contamos con un tablero de 3x3, y tiene todos los elementos despintads, hay que pintarlos disparando a un casillero, se pinta
+# además de este, sus adyacentes, buscar la cantidad mínima de disparos a realizar para pintar el tablero entero.
+
 class problem(SearchProblem):
     def is_goal(self, state):
         for a in state:
@@ -50,22 +53,10 @@ class problem(SearchProblem):
     def cost(self, state1, action, state2):
         return 1
 
-def resolver(metodo_busqueda,initial,controlar_estados_repetidos):
-    problema = problem(initial)
-    visor = BaseViewer()
-	#Busquedas, Grafo -> graph_search=True
-    if (metodo_busqueda == 'breadth_first'): # En amplitud
-        resultado = breadth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'depth_first'): # Profundidad
-        resultado = depth_first(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'greedy'): # Avara
-        resultado = greedy(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    elif (metodo_busqueda == 'astar'): # Estrella
-        resultado = astar(problema, graph_search=controlar_estados_repetidos, viewer=visor)
-    return resultado
-
-result = resolver('astar', ((0,0,0),(0,1,0),(0,2,0),(1,0,0),(1,1,0),(1,2,0),(2,0,0),(2,1,0),(2,2,0)), True)
-print result
-for action, state in result.path():
+problema = problem(((0,0,0),(0,1,0),(0,2,0),(1,0,0),(1,1,0),(1,2,0),(2,0,0),(2,1,0),(2,2,0)))
+visor = BaseViewer()
+resultado = astar(problema, graph_search=True, viewer=visor)
+print resultado
+for action, state in resultado.path():
     print 'action', action
-    print 'result', result
+    print 'result', resultado
